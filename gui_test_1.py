@@ -38,7 +38,7 @@ class GuiApplication(tk.Tk):
     def load_frame1(self):
         self.frame1.pack_propagate(False)
         # logo widget
-        logo_img = ImageTk.PhotoImage(file="D:\\spstock\\dongsan\\offline_lecture\\samplegui\\assets\\RRecipe_logo.png")
+        logo_img = ImageTk.PhotoImage(file=".\\assets\\RRecipe_logo.png")
         logo_widget = tk.Label(self.frame1, image= logo_img, bg=self.bg_colour)
         logo_widget.image = logo_img
         logo_widget.pack()
