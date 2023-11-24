@@ -3,7 +3,7 @@ import tkinter.messagebox as msgbox
 from PIL import ImageTk
 import sqlite3
 import 로그인
-#import 코스피코스닥
+import 코스피코스닥
 
 bg_colour = "#3d6466"
 
@@ -47,22 +47,36 @@ def load_frame1():
             bg="#28393a",
             fg="white",
             cursor="hand2",
+            
             activebackground="#badee2",
             activeforeground="black",
-            command=lambda:load_frame2()
+            command=lambda:load_frame3()
+            ).pack(padx=50,pady=10)
+    
+    # button widget (일봉데이터 요청)
+    tk.Button(frame1,
+            text="Click",
+            font=("TkHeadingFont",20),
+            bg="#28393a",
+            fg="white",
+            cursor="hand2",
+            activebackground="#badee2",
+            activeforeground="black",
+            command=lambda:load_frame4()
             ).pack(pady=20)
     
 def load_frame2():
     accessToken = 로그인.메인().로그인()
-    msgbox.showinfo(accessToken)
+    msgbox.showinfo("확인",accessToken)
 
 def load_frame3():
     
-    msgbox.showinfo('계좌내역가져오기')
+    msgbox.showinfo('확인','계좌내역가져오기')
 
 def load_frame4():
+    testStockCode = 코스피코스닥.TR요청들().코스피코스닥(accessToken)
+    msgbox.showinfo('확인','코스피 코스닥 종목코드 가져오기')
     
-    msgbox.showinfo('일봉데이터 요청')
 
 
 
