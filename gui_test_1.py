@@ -5,10 +5,7 @@ import sqlite3
 import 로그인
 import 코스피코스닥
 
-# def fetch_db():
-#     connection = sqlite3.connect("data/recipes.db")
-#     cursor = connection.cursor()
-#     cursor
+
 
 class GuiApplication(tk.Tk):
     def __init__(self):

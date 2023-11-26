@@ -14,7 +14,7 @@ def time_format():
     return f"{datetime.datetime.now()}|> "
 ic.configureOutput(prefix=time_format)
 
-class 메인:
+class LoginHandler:
     # def __init__(self):
     #     global accessToken
     #     accessToken = self.로그인()
@@ -22,7 +22,7 @@ class 메인:
         #ic("접근키 확인", accessToken)
         
 
-    def 로그인(self) -> str:
+    def login(self) -> str:
         url = "https://openapi.ebestsec.co.kr:8080/oauth2/token"
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         body = {
