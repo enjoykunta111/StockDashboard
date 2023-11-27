@@ -3,6 +3,7 @@ import tkinter.messagebox as msgbox
 from PIL import ImageTk
 import socket
 import threading
+import time
 
 class GuiApplication(tk.Tk):
     def __init__(self):
@@ -15,7 +16,6 @@ class GuiApplication(tk.Tk):
         #self.initialize_ui(self.master)
         self.initialize_ui()
         
-
         
         self.client_socket = None
         self.server_address = ('localhost', 5000)
@@ -41,6 +41,8 @@ class GuiApplication(tk.Tk):
         for frame in (self.frame1, self.frame2):
             frame.grid(row=0, column=0)
 
+        
+
         # 프레임 1에 위젯 추가
         self.load_frame1()
     
@@ -60,17 +62,26 @@ class GuiApplication(tk.Tk):
             font=("TkMenuFont",14)
             ).pack()
         
+
         # button widget (로그인)
         tk.Button(self.frame1,
                 text="로그인",
                 font=("TkHeadingFont",20),
-                bg="#28393a",
+                bg="#28393a",   
                 fg="white",
                 cursor="hand2",
                 activebackground="#badee2",
                 activeforeground="black",
                 command=lambda:self.login()
                 ).pack(pady=20)
+        
+        # Create Date Entry Widgets
+        self.stockcode_entry = tk.Entry(self.frame1)
+        self.stockcode_entry.pack(pady=5)
+        self.start_date_entry = tk.Entry(self.frame1)
+        self.start_date_entry.pack(pady=5)
+        self.end_date_entry = tk.Entry(self.frame1)
+        self.end_date_entry.pack(pady=5)
         
         # button widget (종목코드 출력)
         tk.Button(self.frame1,
@@ -113,10 +124,21 @@ class GuiApplication(tk.Tk):
             print("Error connecting to server:",e)
 
     def stock_price_request(self):
-        threading.Thread(target=self.send_stock_price_request).start()
+        stock_code = self.stockcode_entry.get()
+        start_date = self.start_date_entry.get()
+        end_date = self.end_date_entry.get()
+        threading.Thread(target=self.send_stock_price_request(stock_code,start_date,end_date)).start()
 
-    def send_stock_price_request(self):
+    def send_stock_price_request(self,stock_code,sdate,edate):
+        # First, request stock code export
         self.client_socket.sendall("stock_price_request".encode())
+
+        # Then, request fetching daily prices
+        # You might want to add a delay or a confirmation step here
+        time.sleep(1)
+        self.client_socket.sendall(f"fetch_daily_prices {stock_code} {sdate} {edate}".encode())
+
+
         response = self.client_socket.recv(1024).decode()
         print("Response from server:", response)
 

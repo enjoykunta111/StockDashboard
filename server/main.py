@@ -4,6 +4,7 @@ import sys,os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from client.로그인 import LoginHandler
 from client.코스피코스닥 import PriceRequestHandler
+import asyncio
 
 #Server code
 class MainServer:
@@ -30,20 +31,32 @@ class MainServer:
             data = conn.recv(1024).decode()
             if not data:
                 break
-            
+
+            # Split the received message by spaces
+            received_message = data.split(' ')
+            # Check the command part of the message
+            command = received_message[0]
+
             #받은 데이터가 'login_request' 일 경우
-            if data == "login_request":
+            if command == "login_request":
                 # 로그인.py - Login 클래스의 login() 호출 후 response 저장
                 response = self.login_handler.login()
                 self.access_token = response
                 #연결되어있는 소켓에 보냄
                 conn.sendall(str(response).encode())
-            elif data == "stock_price_request":
+
+            elif command == "stock_price_request":
+                
                 response = self.stock_code_handler.stock_code_request(self.access_token)
                 
                 conn.sendall(str(response).encode())
-                
-
+            elif command == "fetch_daily_prices":
+                # Extract start and end dates from the message
+                shcode = received_message[1] 
+                sdate = received_message[2]
+                edate = received_message[3]
+                #response = self.stock_code_handler.stock_price_request(self.access_token,sdate,edate)
+                asyncio.run(self.stock_code_handler.stock_price_request(self.access_token,shcode, sdate, edate))
 
             # Process incoming data and send responses
             # Example: self.login.process(data), self.data_request.process(data)
