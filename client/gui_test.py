@@ -8,7 +8,7 @@ import time
 class GuiApplication(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.bg_colour = "#3d6466"
+        self.bg_colour = "#c3c3c3"
 
         #self.master = master
         #initialize_ui 메서드는 master 인자를 필요로하기 때문에
@@ -33,7 +33,8 @@ class GuiApplication(tk.Tk):
         self.title('Stock Market Application')
         x = self.winfo_screenwidth() //2
         y = int(self.winfo_screenheight()*0.1)
-        self.geometry('500x600+' + str(x) + '+' + str(y))
+        #self.geometry('500x400+' + str(x) + '+' + str(y))
+        self.geometry('500x400')
 
         # 프레임 초기화 및 배치
         self.frame1 = tk.Frame(self, width=500, height=600, bg=self.bg_colour)
@@ -47,13 +48,15 @@ class GuiApplication(tk.Tk):
         self.load_frame1()
     
     def load_frame1(self):
+        self.frame1.pack(side=tk.LEFT)
         self.frame1.pack_propagate(False)
+        self.frame1.configure(width=100, height=400)
 
         #logo widget
-        logo_img = ImageTk.PhotoImage(file='..\\assets\\RRecipe_logo.png')
-        logo_widget = tk.Label(self.frame1, image = logo_img, bg= self.bg_colour)
-        logo_widget.image = logo_img
-        logo_widget.pack()
+        # logo_img = ImageTk.PhotoImage(file='..\\assets\\RRecipe_logo.png')
+        # logo_widget = tk.Label(self.frame1, image = logo_img, bg= self.bg_colour)
+        # logo_widget.image = logo_img
+        # logo_widget.pack()
 
         tk.Label(self.frame1,
             text="주가데이터 뽑기",
