@@ -50,6 +50,7 @@ class MainServer:
                 response = self.stock_code_handler.stock_code_request(self.access_token)
                 
                 conn.sendall(str(response).encode())
+                
             elif command == "fetch_daily_prices":
                 # Extract start and end dates from the message
                 shcode = received_message[1] 

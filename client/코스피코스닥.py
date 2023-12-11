@@ -79,7 +79,7 @@ class PriceRequestHandler:
             "tr_cd": "t8410",
             "tr_cont": tr_cont,
             "tr_cont_key": tr_cont_key,
-        }
+        }                                                                                                                                                   
         body = {
             "t8410InBlock": {
                 "shcode": shcode,
@@ -94,16 +94,17 @@ class PriceRequestHandler:
                 "sujung": "Y",
             }
         }
+        print(url+'\n')
         response = post(url, headers=headers, data=json.dumps(body))
 
         headers = response.headers
         rTrContKey = headers["tr_cont_key"]
         rTrCont = headers["tr_cont"]
-        ic(headers)
+        #ic(headers)
 
         ctsResult = response.json()["t8410OutBlock"]
         rCtsDate = ctsResult["cts_date"]
-        ic(rCtsDate)
+        #ic(rCtsDate)
         
 
         response.json()["t8410OutBlock1"]
