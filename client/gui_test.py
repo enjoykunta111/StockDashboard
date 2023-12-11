@@ -48,7 +48,7 @@ class GuiApplication(tk.Tk):
         self.load_frame1()
     
     def load_frame1(self):
-        self.frame1.pack(side=tk.LEFT)
+        
         self.frame1.pack_propagate(False)
         self.frame1.configure(width=100, height=400)
 

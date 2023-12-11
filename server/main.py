@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from client.로그인 import LoginHandler
 from client.코스피코스닥 import PriceRequestHandler
 import asyncio
+import pandas as pd
 
 #Server code
 class MainServer:
@@ -52,12 +53,21 @@ class MainServer:
                 conn.sendall(str(response).encode())
                 
             elif command == "fetch_daily_prices":
+                #csv에서 종목들 불러오기
+                stock_code_df = pd.read_csv('../data/stock_code.csv', encoding='cp949')
+
                 # Extract start and end dates from the message
                 shcode = received_message[1] 
                 sdate = received_message[2]
                 edate = received_message[3]
+
+
+                # Find the matching gubun value for the given shcode
+                gubun = int(stock_code_df.loc[stock_code_df['shcode'] == shcode, 'gubun'].iloc[0])
+                
+
                 #response = self.stock_code_handler.stock_price_request(self.access_token,sdate,edate)
-                asyncio.run(self.stock_code_handler.stock_price_request(self.access_token,shcode, sdate, edate))
+                asyncio.run(self.stock_code_handler.stock_price_request(self.access_token,gubun,shcode, sdate, edate))
 
             # Process incoming data and send responses
             # Example: self.login.process(data), self.data_request.process(data)

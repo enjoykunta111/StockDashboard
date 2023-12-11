@@ -155,7 +155,7 @@ class GuiApplication(tk.Tk):
 
 
         response = self.client_socket.recv(1024).decode()
-        print("Response from server:", response)
+        #print("Response from server:", response)
 
     def on_closing(self):
         #창이 닫힐 때 서버 종료
