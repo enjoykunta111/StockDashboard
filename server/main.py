@@ -64,10 +64,10 @@ class MainServer:
 
                 # Find the matching gubun value for the given shcode
                 gubun = int(stock_code_df.loc[stock_code_df['shcode'] == shcode, 'gubun'].iloc[0])
-                
-
+                print(gubun)
+                #print("stock_price_request 들어가기전")
                 #response = self.stock_code_handler.stock_price_request(self.access_token,sdate,edate)
-                asyncio.run(self.stock_code_handler.stock_price_request(self.access_token,gubun,shcode, sdate, edate))
+                asyncio.run(self.stock_code_handler.stock_price_request(self.access_token,gubun,shcode, sdate, edate,tr_cont="N",tr_cont_key="",cts_date=""))
 
             # Process incoming data and send responses
             # Example: self.login.process(data), self.data_request.process(data)

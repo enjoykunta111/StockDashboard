@@ -71,7 +71,7 @@ class PriceRequestHandler:
 
     # csv속 종목코드들의 일자별 Price data db에 저장하기 (csv로 뽑기부터 해보기)
     #아래 메소드는 어디서 불러오는게 맞을까??
-    async def stock_price_request(self, accessCode,gubun,shcode,sdate, edate, tr_cont='N', tr_cont_key='', cts_date='' ):
+    async def stock_price_request(self, accessCode,gubun,shcode,sdate, edate, tr_cont, tr_cont_key, cts_date):
         url = "https://openapi.ebestsec.co.kr:8080/stock/chart"
         headers = {
             "Content-type": "application/json; charset=utf-8",
@@ -96,11 +96,36 @@ class PriceRequestHandler:
         }
         print(url+'\n')
         response = post(url, headers=headers, data=json.dumps(body))
-
+        
         headers = response.headers
-        rTrContKey = headers["tr_cont_key"]
-        rTrCont = headers["tr_cont"]
-        #ic(headers)
+        ic(headers)
+        ic(body)
+        ic(headers)
+        ic(headers['tr_cont'])
+        #rTrContKey = headers["tr_cont_key"]
+        # try:
+        #     # Attempt to access 'tr_cont_key' from the headers
+        #     rTrContKey = headers["tr_cont_key"]
+        # except KeyError:
+        #     # Handle the case where 'tr_cont_key' is not found
+        #     print("Warning: 'tr_cont_key' not found in response headers.")
+        #     # You can set it to None or a default value, or implement other logic
+        #     rTrContKey = None
+            
+        # try:
+        #     # Attempt to access 'tr_cont_key' from the headers
+        #     rTrCont = headers.get('tr_cont')
+        # except KeyError:
+        #     # Handle the case where 'tr_cont_key' is not found
+        #     print("Warning: 'tr_cont' not found in response headers.")
+        #     # You can set it to None or a default value, or implement other logic
+        #     rTrCont = None   
+        rTrContKey = headers.get('tr_cont_key')
+        rTrCont = headers.get('tr_cont')
+        
+        print(rTrContKey)
+        print(rTrCont)
+        print('rTr후')
 
         ctsResult = response.json()["t8410OutBlock"]
         rCtsDate = ctsResult["cts_date"]
