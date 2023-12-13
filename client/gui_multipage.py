@@ -32,17 +32,17 @@ class GuiApplication(tk.Tk):
 
     def load_frame1(self):
         
-        # self.frame1.pack_propagate(False)
-        # self.frame1.configure(width=100, height=400)
+        # Side Menu Frame
         options_frame = tk.Frame(self, bg=self.bg_colour)
         options_frame.pack(side=tk.LEFT)
         options_frame.pack_propagate(False)
         options_frame.configure(width=100,height=400) 
 
         ##############################################
+        ## 로그인 버튼 ##
         login_button = tk.Button(options_frame,
                 text="로그인",
-                font=("Bold",13),
+                font=("Bold",10),
                 bg="#c3c3c3",   
                 fg="#158aff",
                 bd=0,
@@ -50,16 +50,16 @@ class GuiApplication(tk.Tk):
                 activebackground="#badee2",
                 activeforeground="black",
                 command=lambda:[self.indicator(self.login_indicate,self.login_page)]
-                )
+        )
         login_button.place(x=10,y=50)
 
         self.login_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
         self.login_indicate.place(x=3,y=50,width=5,height=40)
         ##################################################
-
+        ## 데이터 수집 버튼 ##
         self.data_collect_button = tk.Button(options_frame,
                 text="데이터수집",
-                font=("Bold",13),
+                font=("Bold",10),
                 bg="#c3c3c3",   
                 fg="#158aff",
                 bd=0,
@@ -67,12 +67,29 @@ class GuiApplication(tk.Tk):
                 activebackground="#badee2",
                 activeforeground="black",
                 command=lambda:[self.indicator(self.data_collect_indicate,self.data_collect_page)]
-                )
+        )
         self.data_collect_button.place(x=10,y=100)
 
         self.data_collect_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
-        self.data_collect_indicate.place(x=3,y=100,width=5,height=40)
-           
+        self.data_collect_indicate.place(x=3,y=100,width=5,height=40)   
+        ##################################################
+        ## 실시간 감시 ## 
+        # self.realtime_monitoring_button = tk.Button(options_frame,
+        #         text="실시간 감시",
+        #         font=("Bold",10),
+        #         bg="#c3c3c3",   
+        #         fg="#158aff",
+        #         bd=0,
+        #         #cursor="hand2",
+        #         activebackground="#badee2",
+        #         activeforeground="black",
+        #         command=lambda:[self.indicator(self.realtime_monitoring_indicate,self.realtime_monitoring_page)]
+        # )
+        # self.realtime_monitoring_button.place(x=10,y=150)
+
+        # self.realtime_monitoring_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
+        # self.realtime_monitoring_indicate.place(x=3,y=150,width=5,height=40)
+        ##################################################
 
 
         self.main_frame = tk.Frame(self, highlightbackground='black'
@@ -83,7 +100,7 @@ class GuiApplication(tk.Tk):
         
     def login_page(self):
         self.login_frame = tk.Frame(self.main_frame)
-        self.lb = tk.Label(self.login_frame, text='Login Page\n\nPage: 1', font=('Bold',30))
+        self.lb = tk.Label(self.login_frame, text='Login Page\n\nPage: 1', font=('Bold',15))
         self.lb.pack()
         self.login_frame.pack(pady=20)
 
@@ -117,7 +134,7 @@ class GuiApplication(tk.Tk):
 
     def data_collect_page(self):
         self.data_collect_frame = tk.Frame(self.main_frame)
-        self.lb = tk.Label(self.data_collect_frame, text='Data Collect Page\n\nPage: 1', font=('Bold',30))
+        self.lb = tk.Label(self.data_collect_frame, text='Data Collect Page\n\nPage: 1', font=('Bold',15))
         self.lb.pack()
         self.data_collect_frame.pack(pady=20)
         # Create Date Entry Widgets
@@ -156,6 +173,29 @@ class GuiApplication(tk.Tk):
 
         response = self.client_socket.recv(1024).decode()
         #print("Response from server:", response)
+
+    def realtime_monitoring_page(self):
+        self.realtime_monitoring_frame = tk.Frame(self.main_frame)
+        self.lb = tk.Label(self.realtime_monitoring_frame, text='Realtime Monitoring Page\n\nPage: 1', font=('Bold',15))
+        self.lb.pack()
+        self.realtime_monitoring_frame.pack(pady=20)
+
+        tk.Label(self.realtime_monitoring_frame, text="전략1:").pack()
+        self.stockcode_entry = tk.Entry(self.realtime_monitoring_frame)
+        self.stockcode_entry.pack(pady=5)
+
+        tk.Label(self.data_collect_frame, text="시작날짜:").pack()
+        self.start_date_entry = tk.Entry(self.data_collect_frame)
+        self.start_date_entry.pack(pady=5)
+
+        tk.Label(self.data_collect_frame, text="종료날짜:").pack()
+        self.end_date_entry = tk.Entry(self.data_collect_frame)
+        self.end_date_entry.pack(pady=5)
+
+        send_button = tk.Button(self.data_collect_frame, text="전송"
+                                ,command=lambda:[self.stock_price_request()] )
+        send_button.pack()
+
 
     def on_closing(self):
         #창이 닫힐 때 서버 종료

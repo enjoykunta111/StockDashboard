@@ -18,7 +18,6 @@ class LoginHandler:
     # def __init__(self):
     #     global accessToken
     #     accessToken = self.로그인()
-
         #ic("접근키 확인", accessToken)
         
 
@@ -36,4 +35,3 @@ class LoginHandler:
 
 
         return response.json()["access_token"]
-

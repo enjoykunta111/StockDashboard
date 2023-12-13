@@ -79,11 +79,12 @@ class PriceRequestHandler:
             "tr_cd": "t8410",
             "tr_cont": tr_cont,
             "tr_cont_key": tr_cont_key,
-        }                                                                                                                                                   
+        }                    
+                                                                                                                                       
         body = {
             "t8410InBlock": {
                 "shcode": shcode,
-                "gubun": gubun,
+                "gubun": "2",
                 "qrycnt": 500,
                 "sdate": sdate,
                 "edate": cts_date or edate,
@@ -94,56 +95,39 @@ class PriceRequestHandler:
                 "sujung": "Y",
             }
         }
+      
         print(url+'\n')
-        response = post(url, headers=headers, data=json.dumps(body))
-        
-        headers = response.headers
         ic(headers)
-        ic(body)
-        ic(headers)
-        ic(headers['tr_cont'])
-        #rTrContKey = headers["tr_cont_key"]
-        # try:
-        #     # Attempt to access 'tr_cont_key' from the headers
-        #     rTrContKey = headers["tr_cont_key"]
-        # except KeyError:
-        #     # Handle the case where 'tr_cont_key' is not found
-        #     print("Warning: 'tr_cont_key' not found in response headers.")
-        #     # You can set it to None or a default value, or implement other logic
-        #     rTrContKey = None
-            
-        # try:
-        #     # Attempt to access 'tr_cont_key' from the headers
-        #     rTrCont = headers.get('tr_cont')
-        # except KeyError:
-        #     # Handle the case where 'tr_cont_key' is not found
-        #     print("Warning: 'tr_cont' not found in response headers.")
-        #     # You can set it to None or a default value, or implement other logic
-        #     rTrCont = None   
-        rTrContKey = headers.get('tr_cont_key')
-        rTrCont = headers.get('tr_cont')
-        
-        print(rTrContKey)
-        print(rTrCont)
-        print('rTr후')
 
+        response = post(url, headers=headers, data=json.dumps(body))
+        headers = response.headers
+        rTrContKey = headers["tr_cont_key"]
+        rTrCont = headers["tr_cont"]
+        
+        ic(body)
+        
+        
+        
+        
+        print('rTr후')
+        #ic(response)
         ctsResult = response.json()["t8410OutBlock"]
         rCtsDate = ctsResult["cts_date"]
-        #ic(rCtsDate)
-        
-
+        ic(rTrContKey)
+        ic(rTrCont)
+        ic(rCtsDate)
         response.json()["t8410OutBlock1"]
 
-        if rTrCont == "Y":
-            await asyncio.sleep(2)
-            await self.일봉들요청(
-                accessCode=accessCode,
-                tr_cont=tr_cont,
-                tr_cont_key=rTrContKey,
-                cts_date=rCtsDate,
-            )
+        # if rTrCont == "Y":
+        #     await asyncio.sleep(2)
+        #     await self.일봉들요청(
+        #         accessCode=accessCode,
+        #         tr_cont=tr_cont,
+        #         tr_cont_key=rTrContKey,
+        #         cts_date=rCtsDate,
+        #     )
 
-        print(response.json()["t8410OutBlock1"])
+        #print(response.json()["t8410OutBlock1"])
 
 
 def time_format():

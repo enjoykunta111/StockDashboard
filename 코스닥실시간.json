@@ -1,0 +1,34 @@
+{"header":
+    {"tr_cd":"K3_","tr_key":"000250"},
+    "body":
+        {"mdchecnt":"1038",
+        "sign":"5",
+        "mschecnt":"1243",
+        "mdvolume":"95392",
+        "w_avrg":"68088",
+        "cpower":"54.70",
+        "offerho":"67500",
+        "cvolume":"1",
+        "high":"69100",
+        "bidho":"67300",
+        "low":"67200",
+        "price":"67500",
+        "cgubun":"+",
+        "value":"10134",
+        "change":"1500",
+        "shcode":"000250",
+        "chetime":"141621",
+        "opentime":"090005",
+        "lowtime":"141356",
+        "volume":"148831",
+        "drate":"-2.17",
+        "hightime":"090310",
+        "jnilvolume":"193053",
+        "msvolume":"52182",
+        "open":"68200",
+        "status":"00"
+        }
+    }
+
+{"header":{"tr_cd":"K3_","tr_key":"000250"},"body":{"mdchecnt":"1038","sign":"5","mschecnt":"1242","mdvolume":"95392","w_avrg":"68088","cpower":"54.70","offerho":"67500","cvolume":"8","high":"69100","bidho":"67300","low":"67200","price":"67300","cgubun":"-","value":"10133","change":"1700","shcode":"000250","chetime":"141614","opentime":"090005","lowtime":"141356","volume":"148830","drate":"-2.46","hightime":"090310","jnilvolume":"193053","msvolume":"52181","open":"68200","status":"00"}}
+{"header":{"tr_cd":"K3_","tr_key":"000250"},"body":{"mdchecnt":"1037","sign":"5","mschecnt":"1242","mdvolume":"95384","w_avrg":"68088","cpower":"54.71","offerho":"67400","cvolume":"19","high":"69100","bidho":"67300","low":"67200","price":"67400","cgubun":"-","value":"10133","change":"1600","shcode":"000250","chetime":"141614","opentime":"090005","lowtime":"141356","volume":"148822","drate":"-2.32","hightime":"090310","jnilvolume":"193053","msvolume":"52181","open":"68200","status":"00"}}

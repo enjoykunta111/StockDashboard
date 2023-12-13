@@ -11,8 +11,8 @@ def get_access_token():
     headers = {"Content-type": "application/x-www-form-urlencoded"}
     body = {    
         "grant_type": "client_credentials",
-        "appkey": "sample",
-        "appsecretkey": "sample",
+        "appkey": "PSZmG6ZONgejhZUpa8FGkb9hBPi107y1FMZg",
+        "appsecretkey": "2L3NKwyRDFi1DmOkCgp6jaMeShlDtO3z",
         "scope": "oob",
     }
     response = post(url, headers=headers, data=body)

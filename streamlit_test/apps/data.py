@@ -59,4 +59,4 @@ def display_page_datacollect():
         st.write(f"종료 날짜: {end_date.strftime('%Y%m%d')}")
     
     handler = StockDataHandler()
-    handler.
+    
