@@ -96,9 +96,6 @@ class PriceRequestHandler:
             }
         }
       
-        print(url+'\n')
-        ic(headers)
-
         response = post(url, headers=headers, data=json.dumps(body))
         headers = response.headers
         rTrContKey = headers["tr_cont_key"]

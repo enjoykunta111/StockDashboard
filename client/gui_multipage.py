@@ -19,6 +19,7 @@ class GuiApplication(tk.Tk):
 
     def hide_indicator(self):
         self.login_indicate.config(bg='#c3c3c3')
+        self.check_account_indicate.config(bg='#c3c3c3')
         self.data_collect_indicate.config(bg='#c3c3c3')
     def delete_pages(self):
         for frame in self.main_frame.winfo_children():
@@ -30,8 +31,7 @@ class GuiApplication(tk.Tk):
         self.delete_pages()
         page()
 
-    def load_frame1(self):
-        
+    def load_frame1(self):        
         # Side Menu Frame
         options_frame = tk.Frame(self, bg=self.bg_colour)
         options_frame.pack(side=tk.LEFT)
@@ -49,12 +49,29 @@ class GuiApplication(tk.Tk):
                 #cursor="hand2",
                 activebackground="#badee2",
                 activeforeground="black",
-                command=lambda:[self.indicator(self.login_indicate,self.login_page)]
+                command=lambda:[self.indicator(self.login_indicate,self.login_trading_system)]
         )
         login_button.place(x=10,y=50)
 
         self.login_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
         self.login_indicate.place(x=3,y=50,width=5,height=40)
+        ##################################################
+        ## 예수금 조회 버튼 ##
+        check_account_button = tk.Button(options_frame,
+                text="예수금조회",
+                font=("Bold",10),
+                bg="#c3c3c3",   
+                fg="#158aff",
+                bd=0,
+                #cursor="hand2",
+                activebackground="#badee2",
+                activeforeground="black",
+                command=lambda:[self.indicator(self.check_account_indicate,self.check_account_page)]
+        )
+        check_account_button.place(x=10,y=100)
+
+        self.check_account_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
+        self.check_account_indicate.place(x=3,y=100,width=5,height=40)
         ##################################################
         ## 데이터 수집 버튼 ##
         self.data_collect_button = tk.Button(options_frame,
@@ -68,28 +85,28 @@ class GuiApplication(tk.Tk):
                 activeforeground="black",
                 command=lambda:[self.indicator(self.data_collect_indicate,self.data_collect_page)]
         )
-        self.data_collect_button.place(x=10,y=100)
+        self.data_collect_button.place(x=10,y=150)
 
         self.data_collect_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
-        self.data_collect_indicate.place(x=3,y=100,width=5,height=40)   
-        ##################################################
+        self.data_collect_indicate.place(x=3,y=150,width=5,height=40)   
+        #################################################
         ## 실시간 감시 ## 
-        # self.realtime_monitoring_button = tk.Button(options_frame,
-        #         text="실시간 감시",
-        #         font=("Bold",10),
-        #         bg="#c3c3c3",   
-        #         fg="#158aff",
-        #         bd=0,
-        #         #cursor="hand2",
-        #         activebackground="#badee2",
-        #         activeforeground="black",
-        #         command=lambda:[self.indicator(self.realtime_monitoring_indicate,self.realtime_monitoring_page)]
-        # )
-        # self.realtime_monitoring_button.place(x=10,y=150)
+        self.realtime_monitoring_button = tk.Button(options_frame,
+                text="실시간 감시",
+                font=("Bold",10),
+                bg="#c3c3c3",   
+                fg="#158aff",
+                bd=0,
+                #cursor="hand2",
+                activebackground="#badee2",
+                activeforeground="black",
+                command=lambda:[self.indicator(self.realtime_monitoring_indicate,self.realtime_monitoring_page)]
+        )
+        self.realtime_monitoring_button.place(x=10,y=200)
 
-        # self.realtime_monitoring_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
-        # self.realtime_monitoring_indicate.place(x=3,y=150,width=5,height=40)
-        ##################################################
+        self.realtime_monitoring_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
+        self.realtime_monitoring_indicate.place(x=3,y=200,width=5,height=40)
+        #################################################
 
 
         self.main_frame = tk.Frame(self, highlightbackground='black'
@@ -97,13 +114,9 @@ class GuiApplication(tk.Tk):
         self.main_frame.pack(side=tk.LEFT)
         self.main_frame.pack_propagate(False)
         self.main_frame.configure(height=400, width=500)
-        
-    def login_page(self):
-        self.login_frame = tk.Frame(self.main_frame)
-        self.lb = tk.Label(self.login_frame, text='Login Page\n\nPage: 1', font=('Bold',15))
-        self.lb.pack()
-        self.login_frame.pack(pady=20)
 
+    # 로그인클릭시 클라이언트 소켓생성
+    def login_trading_system(self):
         if self.client_socket is None:
             # 소켓 생성 후 서버 연결
             self.client_socket = socket.socket()
@@ -131,7 +144,20 @@ class GuiApplication(tk.Tk):
         except Exception as e:
             print("Error connecting to server:",e)
 
+    # 예수금 조회 페이지    
+    def check_account_page(self):
+        self.check_account_frame = tk.Frame(self.main_frame)
+        self.lb = tk.Label(self.check_account_frame, text='예수금조회 \n\nPage: 1', font=('Bold',15))
+        self.lb.pack()
+        self.check_account_frame.pack(pady=20)
 
+        tk.Label(self.data_collect_frame, text="종목코드:").pack()
+        self.stockcode_entry = tk.Entry(self.data_collect_frame)
+        self.stockcode_entry.pack(pady=5)
+
+
+
+    # DB 수집 페이지
     def data_collect_page(self):
         self.data_collect_frame = tk.Frame(self.main_frame)
         self.lb = tk.Label(self.data_collect_frame, text='Data Collect Page\n\nPage: 1', font=('Bold',15))
@@ -169,8 +195,6 @@ class GuiApplication(tk.Tk):
         # You might want to add a delay or a confirmation step here
         time.sleep(1)
         self.client_socket.sendall(f"fetch_daily_prices {stock_code} {sdate} {edate}".encode())
-
-
         response = self.client_socket.recv(1024).decode()
         #print("Response from server:", response)
 
