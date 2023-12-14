@@ -15,31 +15,36 @@ def time_format():
     return f"{datetime.datetime.now()}|> "
 ic.configureOutput(prefix=time_format)
 
-class 메인:
-    보유종목들: list = []
+class CheckAccountHandler:
+    def __init__(self, callback=None):
+        self.callback=callback
+        self.보유종목들: list = []
 
-    async def 시작(self):
-        accessToken = self.로그인()
-        ic("접근키 확인", accessToken)
+    async def start_check(self, accessToken):
+        #accessToken = self.로그인()
+        #ic("접근키 확인", accessToken)
 
         await TR요청들().주식잔고반복요청(accessCode=accessToken, callbackListener=self.잔고반복요청수신)
 
     def 잔고반복요청수신(self, results):
-        ic(results)
+        #ic(results)
+        if self.callback:
+            self.callback(results) #결과를 main.py에 전송
 
-    def 로그인(self) -> str:
-        url = "https://openapi.ebestsec.co.kr:8080/oauth2/token"
-        headers = {"Content-type": "application/x-www-form-urlencoded"}
-        body = {
-            "grant_type": "client_credentials",
-            "appkey": "PSpDMSy",
-            "appsecretkey": "uizu9MiIwM",
-            "scope": "oob",
-        }
 
-        response = post(url, headers=headers, data=body)
+    # def 로그인(self) -> str:
+    #     url = "https://openapi.ebestsec.co.kr:8080/oauth2/token"
+    #     headers = {"Content-type": "application/x-www-form-urlencoded"}
+    #     body = {
+    #         "grant_type": "client_credentials",
+    #         "appkey": "PSpDMSy",
+    #         "appsecretkey": "uizu9MiIwM",
+    #         "scope": "oob",
+    #     }
 
-        return response.json()["access_token"]
+    #     response = post(url, headers=headers, data=body)
+
+    #     return response.json()["access_token"]
 
 
 class TR요청들:
@@ -79,7 +84,7 @@ class TR요청들:
 # loop.close()
 
 # python 3.7 이후 사용, 최신 형태를 추천
-asyncio.run(메인().시작())
+#asyncio.run(메인().시작())
 
 # 또 다른 비동기 표현방식
 # async def main_async():

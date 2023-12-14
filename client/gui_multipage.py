@@ -145,17 +145,49 @@ class GuiApplication(tk.Tk):
             print("Error connecting to server:",e)
 
     # 예수금 조회 페이지    
-    def check_account_page(self):
+    def check_account_page(self,data):
+        self.check_account_request()
         self.check_account_frame = tk.Frame(self.main_frame)
         self.lb = tk.Label(self.check_account_frame, text='예수금조회 \n\nPage: 1', font=('Bold',15))
         self.lb.pack()
         self.check_account_frame.pack(pady=20)
 
-        tk.Label(self.data_collect_frame, text="종목코드:").pack()
-        self.stockcode_entry = tk.Entry(self.data_collect_frame)
-        self.stockcode_entry.pack(pady=5)
+        tk.Label(self.check_account_frame, text="예수금:").pack()
+        self.check_account_data_label = tk.Label(self.check_account_frame, text=str(data), font=('Bold',10))
+        self.check_account_data_label.pack()
+        self.check_account_data_label.config(text=str(data))
+
+        # self.stockcode_entry = tk.Entry(self.check_account_frame)
+        # self.stockcode_entry.pack(pady=5)
 
 
+    def check_account_request(self):
+        if self.client_socket is None: 
+            # 소켓 생성 후 서버 연결
+            self.client_socket = socket.socket()
+            try:
+                self.client_socket.connect(self.server_address)
+            except Exception as e:
+                print('Error connecting to server:',e)
+                return
+
+        #잔고조회를 별도의 스레드에서 처리
+        threading.Thread(target=self.send_check_account_request).start()
+
+    def send_check_account_request(self):
+        try:
+            # 로그인 요청 메시지 전송
+            self.client_socket.sendall("check_account_request".encode())
+            # 서버로부터 응답받기
+            response = self.client_socket.recv(1024).decode()
+            #print("Response from server:", response)
+            print(response.json())
+
+            # 연결 종료
+            #self.client_socket.close()
+
+        except Exception as e:
+            print("Error connecting to server:",e)
 
     # DB 수집 페이지
     def data_collect_page(self):

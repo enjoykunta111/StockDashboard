@@ -3,6 +3,7 @@ import threading
 import sys,os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from client.로그인 import LoginHandler
+from client.check_account import CheckAccountHandler
 from client.코스피코스닥 import PriceRequestHandler
 import asyncio
 import pandas as pd
@@ -15,7 +16,9 @@ class MainServer:
         self.server_socket = socket.socket()
         self.server_socket.bind((self.host, self.port))
         self.login_handler = LoginHandler()
+        self.check_account_handler = CheckAccountHandler(self.callback_check_account)
         self.stock_code_handler = PriceRequestHandler()
+
 
         self.access_token = None
 
@@ -27,7 +30,13 @@ class MainServer:
             print(f'Connected by {address}')
             threading.Thread(target=self.client_handler, args=(conn,)).start()
 
+    def callback_check_account(self, data, conn):
+        #print("Received data:", data)
+        conn.sendall(str(data).encode())
+
     def client_handler(self, conn):
+        asyncio.set_event_loop(asyncio.new_event_loop()) # Create a new event loop for this thread
+        loop = asyncio.get_event_loop()
         while True:
             data = conn.recv(1024).decode()
             if not data:
@@ -38,6 +47,8 @@ class MainServer:
             # Check the command part of the message
             command = received_message[0]
 
+            print(received_message)
+            
             #받은 데이터가 'login_request' 일 경우
             if command == "login_request":
                 # 로그인.py - Login 클래스의 login() 호출 후 response 저장
@@ -45,6 +56,17 @@ class MainServer:
                 self.access_token = response
                 #연결되어있는 소켓에 보냄
                 conn.sendall(str(response).encode())
+            
+            elif command == "check_account_request":
+
+                #asyncio.run은 새로운 이벤트루프를 시작하고 주어진 코루틴을 실행하여 완료될때까지 기다리는것
+                #하지만 이것은 이미 실행중인 이벤트 루프가 없는 경우에만 사용해야 한다.
+                #이미  실행중인 이벤트 루프가 있다면 loop.create_task() 또는 asyncio.create_task()를 사용하는 것이 적절하다.
+                #response = asyncio.run(self.check_account_handler.start_check(self.access_token))
+
+                #loop = asyncio.get_event_loop()
+                loop.run_until_complete(self.check_account_handler.start_check(self.access_token, conn))
+                #conn.sendall(str(response).encode())
 
             elif command == "stock_price_request":
                 
