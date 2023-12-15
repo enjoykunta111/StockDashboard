@@ -29,7 +29,8 @@ class GuiApplication(tk.Tk):
         self.hide_indicator()
         lb.config(bg='#158aff')
         self.delete_pages()
-        page()
+        
+        
 
     def load_frame1(self):        
         # Side Menu Frame
@@ -66,7 +67,7 @@ class GuiApplication(tk.Tk):
                 #cursor="hand2",
                 activebackground="#badee2",
                 activeforeground="black",
-                command=lambda:[self.indicator(self.check_account_indicate,self.check_account_page)]
+                command=lambda:[self.indicator(self.check_account_indicate,self.check_account_page),self.check_account_request]
         )
         check_account_button.place(x=10,y=100)
 
@@ -86,7 +87,7 @@ class GuiApplication(tk.Tk):
                 command=lambda:[self.indicator(self.data_collect_indicate,self.data_collect_page)]
         )
         self.data_collect_button.place(x=10,y=150)
-
+        
         self.data_collect_indicate = tk.Label(options_frame, text='', bg='#c3c3c3')
         self.data_collect_indicate.place(x=3,y=150,width=5,height=40)   
         #################################################
@@ -146,7 +147,7 @@ class GuiApplication(tk.Tk):
 
     # 예수금 조회 페이지    
     def check_account_page(self,data):
-        self.check_account_request()
+        #data = self.check_account_request()
         self.check_account_frame = tk.Frame(self.main_frame)
         self.lb = tk.Label(self.check_account_frame, text='예수금조회 \n\nPage: 1', font=('Bold',15))
         self.lb.pack()
@@ -172,7 +173,7 @@ class GuiApplication(tk.Tk):
                 return
 
         #잔고조회를 별도의 스레드에서 처리
-        threading.Thread(target=self.send_check_account_request).start()
+        #threading.Thread(target=self.send_check_account_request).start()
 
     def send_check_account_request(self):
         try:
@@ -180,8 +181,10 @@ class GuiApplication(tk.Tk):
             self.client_socket.sendall("check_account_request".encode())
             # 서버로부터 응답받기
             response = self.client_socket.recv(1024).decode()
-            #print("Response from server:", response)
-            print(response.json())
+            self.received_data = response.json() # store the response data
+            self.check_account_page(self.received_data)
+            
+            #print(response.json())
 
             # 연결 종료
             #self.client_socket.close()
