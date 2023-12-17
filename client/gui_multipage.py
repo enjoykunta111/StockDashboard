@@ -12,6 +12,8 @@ class GuiApplication(tk.Tk):
         self.client_socket = None
         self.server_address = ('localhost', 5000)
 
+        self.is_check_account_active = False
+
     def initialize_ui(self):
         self.title('Stock Market Application')
         self.geometry('500x400')
@@ -21,15 +23,29 @@ class GuiApplication(tk.Tk):
         self.login_indicate.config(bg='#c3c3c3')
         self.check_account_indicate.config(bg='#c3c3c3')
         self.data_collect_indicate.config(bg='#c3c3c3')
+
     def delete_pages(self):
         for frame in self.main_frame.winfo_children():
             frame.destroy()
 
-    def indicator(self,lb,page):
+    def indicator(self,lb):
         self.hide_indicator()
         lb.config(bg='#158aff')
         self.delete_pages()
-        
+        #page()
+
+    def handle_login_button(self):
+        self.indicator(self.login_indicate)
+        self.login_trading_system()
+
+    def handle_check_account_button(self):
+        # Update UI indicator for check account button
+        self.indicator(self.check_account_indicate)
+
+        # Start the check account process
+        self.is_check_account_active = True
+        self.start_check_account_process()
+    
         
 
     def load_frame1(self):        
@@ -50,7 +66,7 @@ class GuiApplication(tk.Tk):
                 #cursor="hand2",
                 activebackground="#badee2",
                 activeforeground="black",
-                command=lambda:[self.indicator(self.login_indicate,self.login_trading_system)]
+                command=lambda:[self.handle_login_button()]
         )
         login_button.place(x=10,y=50)
 
@@ -67,7 +83,7 @@ class GuiApplication(tk.Tk):
                 #cursor="hand2",
                 activebackground="#badee2",
                 activeforeground="black",
-                command=lambda:[self.indicator(self.check_account_indicate,self.check_account_page),self.check_account_request]
+                command=lambda:[self.handle_check_account_button()]
         )
         check_account_button.place(x=10,y=100)
 
@@ -161,6 +177,9 @@ class GuiApplication(tk.Tk):
         # self.stockcode_entry = tk.Entry(self.check_account_frame)
         # self.stockcode_entry.pack(pady=5)
 
+    def start_check_account_process(self):
+        # Start the process of retrieving check account data
+        self.check_account_request()
 
     def check_account_request(self):
         if self.client_socket is None: 
@@ -173,24 +192,31 @@ class GuiApplication(tk.Tk):
                 return
 
         #잔고조회를 별도의 스레드에서 처리
-        #threading.Thread(target=self.send_check_account_request).start()
+        threading.Thread(target=self.send_check_account_request).start()
 
     def send_check_account_request(self):
-        try:
-            # 로그인 요청 메시지 전송
-            self.client_socket.sendall("check_account_request".encode())
-            # 서버로부터 응답받기
-            response = self.client_socket.recv(1024).decode()
-            self.received_data = response.json() # store the response data
-            self.check_account_page(self.received_data)
+        while self.is_check_account_active:
             
-            #print(response.json())
+            try:
+                # 로그인 요청 메시지 전송
+                self.client_socket.sendall("check_account_request".encode())
+                # 서버로부터 응답받기
+                response = self.client_socket.recv(1024).decode()
+                print(f'send_request에서의 data:{response}')
+                #self.received_data = response.json() # store the response data
+                
+                self.check_account_page(response)
+                time.sleep(1)
+                #print(response.json())
 
-            # 연결 종료
-            #self.client_socket.close()
+                # 연결 종료
+                #self.client_socket.close()
 
-        except Exception as e:
-            print("Error connecting to server:",e)
+            except Exception as e:
+                print("Error connecting to server:",e)
+            
+            if not self.is_check_account_active:
+                break
 
     # DB 수집 페이지
     def data_collect_page(self):

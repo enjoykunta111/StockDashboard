@@ -20,7 +20,7 @@ class CheckAccountHandler:
         self.callback=callback
         self.보유종목들: list = []
 
-    async def start_check(self, accessToken):
+    async def start_check(self, accessToken, conn):
         #accessToken = self.로그인()
         #ic("접근키 확인", accessToken)
 
