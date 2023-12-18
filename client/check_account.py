@@ -16,8 +16,9 @@ def time_format():
 ic.configureOutput(prefix=time_format)
 
 class CheckAccountHandler:
-    def __init__(self, callback=None):
+    def __init__(self, conn,callback):
         self.callback=callback
+        self.conn = conn
         self.보유종목들: list = []
 
     async def start_check(self, accessToken, conn):
@@ -29,7 +30,7 @@ class CheckAccountHandler:
     def 잔고반복요청수신(self, results):
         #ic(results)
         if self.callback:
-            self.callback(results) #결과를 main.py에 전송
+            self.callback(results, self.conn) #결과를 main.py에 전송
 
 
     # def 로그인(self) -> str:

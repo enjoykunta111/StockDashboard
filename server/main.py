@@ -10,13 +10,14 @@ import pandas as pd
 
 #Server code
 class MainServer:
-    def __init__(self, host, port):
+    def __init__(self, host, port ):
         self.host = host
         self.port = port
+        
         self.server_socket = socket.socket()
         self.server_socket.bind((self.host, self.port))
         self.login_handler = LoginHandler()
-        self.check_account_handler = CheckAccountHandler(self.callback_check_account)
+        #self.check_account_handler = CheckAccountHandler(self.callback_check_account)
         self.stock_code_handler = PriceRequestHandler()
 
 
@@ -37,6 +38,7 @@ class MainServer:
     def client_handler(self, conn):
         asyncio.set_event_loop(asyncio.new_event_loop()) # Create a new event loop for this thread
         loop = asyncio.get_event_loop()
+        self.check_account_handler = CheckAccountHandler(self.callback_check_account, conn)
         while True:
             data = conn.recv(1024).decode()
             if not data:
@@ -66,7 +68,7 @@ class MainServer:
 
                 #loop = asyncio.get_event_loop()
                 loop.run_until_complete(self.check_account_handler.start_check(self.access_token, conn))
-                #conn.sendall(str(response).encode())
+                conn.sendall(str(response).encode())
 
             elif command == "stock_price_request":
                 
