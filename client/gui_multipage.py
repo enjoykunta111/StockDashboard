@@ -12,7 +12,7 @@ class GuiApplication(tk.Tk):
         self.client_socket = None
         self.server_address = ('localhost', 5000)
 
-        self.is_check_account_active = False
+        #self.is_check_account_active = False
 
     def initialize_ui(self):
         self.title('Stock Market Application')
@@ -150,7 +150,7 @@ class GuiApplication(tk.Tk):
         # 로그인 요청 메시지 전송
         try:
             # 로그인 요청 메시지 전송
-            self.client_socket.sendall("login_request".encode())
+            self.client_socket.sendall("/ebest/login".encode())
             # 서버로부터 응답받기
             response = self.client_socket.recv(1024).decode()
             print("Response from server:", response)
@@ -177,9 +177,6 @@ class GuiApplication(tk.Tk):
         # self.stockcode_entry = tk.Entry(self.check_account_frame)
         # self.stockcode_entry.pack(pady=5)
 
-    def start_check_account_process(self):
-        # Start the process of retrieving check account data
-        self.check_account_request()
 
     def check_account_request(self):
         if self.client_socket is None: 
@@ -199,7 +196,7 @@ class GuiApplication(tk.Tk):
             
             try:
                 # 로그인 요청 메시지 전송
-                self.client_socket.sendall("check_account_request".encode())
+                self.client_socket.sendall("/ebest/check_account".encode())
                 # 서버로부터 응답받기
                 response = self.client_socket.recv(1024).decode()
                 print(f'send_request에서의 data:{response}')

@@ -6,15 +6,10 @@
 
 import asyncio
 from requests import post
-from icecream import ic
-import datetime
 import json
+import socket
 
-
-def time_format():
-    return f"{datetime.datetime.now()}|> "
-ic.configureOutput(prefix=time_format)
-
+    
 class CheckAccountHandler:
     def __init__(self, conn,callback):
         self.callback=callback
@@ -33,22 +28,9 @@ class CheckAccountHandler:
             self.callback(results, self.conn) #결과를 main.py에 전송
 
 
-    # def 로그인(self) -> str:
-    #     url = "https://openapi.ebestsec.co.kr:8080/oauth2/token"
-    #     headers = {"Content-type": "application/x-www-form-urlencoded"}
-    #     body = {
-    #         "grant_type": "client_credentials",
-    #         "appkey": "PSpDMSy",
-    #         "appsecretkey": "uizu9MiIwM",
-    #         "scope": "oob",
-    #     }
-
-    #     response = post(url, headers=headers, data=body)
-
-    #     return response.json()["access_token"]
-
-
 class TR요청들:
+    
+
     async def 주식잔고(self, accessCode):
         url = "https://openapi.ebestsec.co.kr:8080/stock/accno"
         headers = {

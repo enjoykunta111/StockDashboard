@@ -3,10 +3,12 @@ import threading
 import sys,os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from client.로그인 import LoginHandler
-from client.check_account import CheckAccountHandler
+#from client.check_account import CheckAccountHandler
+from client.modified_check_account import CheckAccountHandler
 from client.코스피코스닥 import PriceRequestHandler
 import asyncio
 import pandas as pd
+import check_account
 
 #Server code
 class MainServer:
@@ -35,12 +37,12 @@ class MainServer:
         #print("Received data:", data)
         conn.sendall(str(data).encode())
 
-    def client_handler(self, conn):
+    async def client_handler(self, conn):
         asyncio.set_event_loop(asyncio.new_event_loop()) # Create a new event loop for this thread
         loop = asyncio.get_event_loop()
         self.check_account_handler = CheckAccountHandler(self.callback_check_account, conn)
         while True:
-            data = conn.recv(1024).decode()
+            data = await conn.recv(1024).decode()
             if not data:
                 break
 
@@ -68,6 +70,7 @@ class MainServer:
 
                 #loop = asyncio.get_event_loop()
                 loop.run_until_complete(self.check_account_handler.start_check(self.access_token, conn))
+                #response = await self.send_request_to_check_account('check_account_request_2')
                 conn.sendall(str(response).encode())
 
             elif command == "stock_price_request":
